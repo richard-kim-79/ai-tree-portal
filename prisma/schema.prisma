@@ -13,7 +13,7 @@ model Post {
   content   String
   author    String
   date      DateTime @default(now())
-  tags      String[]
+  tags      String   // 쉼표로 구분된 문자열로 저장
   category  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -31,7 +31,7 @@ model User {
 
 model NFT {
   id        String   @id @default(uuid())
-  tokenId   Int      @unique @default(autoincrement())
+  tokenId   Int      @unique
   rarity    String
   owner     String
   createdAt DateTime @default(now())
