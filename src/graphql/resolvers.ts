@@ -2,6 +2,8 @@ import { createPubSub } from 'graphql-yoga';
 import { getAllPosts, getPostById, createPost, updatePost, deletePost, Post } from '../lib/markdown';
 import { getCommitHistory, rollbackToCommit, getFileDiff } from '../lib/git';
 import { User, NFT, Contribution, ContributionType, ContributionStatus, LeaderboardEntry } from '../types/incentive';
+import { PrismaClient } from '@prisma/client';
+import { PubSub } from 'graphql-subscriptions';
 
 interface PostInput {
   title: string;
@@ -29,11 +31,21 @@ interface PubSubEvents {
   LEADERBOARD_UPDATED: { leaderboardUpdated: LeaderboardEntry[] };
 }
 
-const pubsub = createPubSub<PubSubEvents>();
-let posts: Post[] = [];
-let users: User[] = [];
-let nfts: NFT[] = [];
-let contributions: Contribution[] = [];
+const prisma = new PrismaClient();
+const pubsub = new PubSub<PubSubEvents>();
+
+const startPingInterval = () => {
+  setInterval(() => {
+    pubsub.publish('_PING', true);
+  }, 5000);
+};
+
+startPingInterval();
+
+const posts: Post[] = [];
+const users: User[] = [];
+const nfts: NFT[] = [];
+const contributions: Contribution[] = [];
 let tokenIdCounter = 1;
 
 // 포인트 계산 규칙
