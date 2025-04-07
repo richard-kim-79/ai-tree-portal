@@ -1,18 +1,19 @@
 'use client';
 
-export interface CommitInfo {
+export interface Commit {
   hash: string;
-  author: string;
-  date: string;
   message: string;
-  changes: {
-    added: string[];
-    modified: string[];
-    deleted: string[];
-  };
+  date: string;
+  author: string;
 }
 
-export async function getCommitHistory(): Promise<CommitInfo[]> {
+export interface FileDiff {
+  oldContent: string;
+  newContent: string;
+  changes: string[];
+}
+
+export async function getCommitHistory(): Promise<Commit[]> {
   try {
     const response = await fetch('/api/git?action=history');
     if (!response.ok) {
@@ -22,11 +23,11 @@ export async function getCommitHistory(): Promise<CommitInfo[]> {
     return data.commits;
   } catch (error) {
     console.error('커밋 이력 조회 실패:', error);
-    throw error;
+    return [];
   }
 }
 
-export async function rollbackToCommit(commitHash: string): Promise<void> {
+export async function rollbackToCommit(commitHash: string): Promise<boolean> {
   try {
     const response = await fetch('/api/git', {
       method: 'POST',
@@ -40,32 +41,32 @@ export async function rollbackToCommit(commitHash: string): Promise<void> {
     });
 
     if (!response.ok) {
-      const data = await response.json();
-      throw new Error(data.error || '롤백 실패');
+      throw new Error('롤백 실패');
     }
+
+    const data = await response.json();
+    return data.success;
   } catch (error) {
     console.error('롤백 실패:', error);
-    throw error;
+    return false;
   }
 }
 
 export async function getFileDiff(
-  filePath: string,
   commitHash1: string,
-  commitHash2: string
-): Promise<string> {
+  commitHash2: string,
+  filePath: string
+): Promise<FileDiff> {
   try {
     const response = await fetch(
       `/api/git?action=diff&hash1=${commitHash1}&hash2=${commitHash2}&file=${encodeURIComponent(filePath)}`
     );
 
     if (!response.ok) {
-      const data = await response.json();
-      throw new Error(data.error || '파일 변경사항 비교 실패');
+      throw new Error('파일 변경사항 비교 실패');
     }
 
-    const data = await response.json();
-    return data.diff;
+    return await response.json();
   } catch (error) {
     console.error('파일 변경사항 비교 실패:', error);
     throw error;

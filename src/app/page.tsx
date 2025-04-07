@@ -1,6 +1,7 @@
 import { getAllPosts, getAllTags, getAllCategories } from '@/lib/markdown';
 import Search from '@/components/Search';
 import Link from 'next/link';
+import WebSocketTest from '@/components/WebSocketTest';
 
 export default async function HomePage() {
   const [posts, tags, categories] = await Promise.all([
@@ -74,6 +75,7 @@ export default async function HomePage() {
           </div>
         </section>
       </div>
+      <WebSocketTest />
     </main>
   );
 }

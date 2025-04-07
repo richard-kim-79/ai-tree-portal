@@ -9,16 +9,28 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@graphql-tools/load-files": "^7.0.1",
+    "@graphql-tools/schema": "^10.0.23",
     "@tailwindcss/typography": "^0.5.16",
     "@types/lodash": "^4.17.16",
+    "@types/ws": "^8.18.1",
     "date-fns": "^4.1.0",
+    "graphql": "^16.10.0",
+    "graphql-subscriptions": "^3.0.0",
+    "graphql-tools": "^9.0.18",
+    "graphql-ws": "^6.0.4",
+    "graphql-yoga": "^5.13.2",
     "gray-matter": "^4.0.3",
     "lodash": "^4.17.21",
     "next": "15.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "remark": "^15.0.1",
-    "remark-html": "^16.0.1"
+    "remark-html": "^16.0.1",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "ws": "^8.18.1",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
