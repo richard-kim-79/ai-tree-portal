@@ -1,0 +1,39 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  author    String
+  date      DateTime @default(now())
+  tags      String[]
+  category  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  points    Int      @default(0)
+  level     Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NFT {
+  id        String   @id @default(uuid())
+  tokenId   Int      @unique @default(autoincrement())
+  rarity    String
+  owner     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+} 
